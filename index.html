@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<input type="text" id="urltext" style="width: 400px;" />
+<input type="button" value="Go" onclick="loadURLs();" />
+<div id="etchimg"></div>
+<script type="text/javascript">
+	function loadURLs() {
+		var images = [];
+		var rawtextArray = document.getElementById("urltext").value.split(" ");
+		console.log(rawtextArray);
+		rawtextArray.forEach(function(v, i){
+			var rer = v.match(/"(http:\/\/.+)"/g);
+			if(rer != null) {
+				images.push(rer);
+			}
+		});
+		console.log(images);
+		images.forEach(function(v, i){
+			document.getElementById("etchimg").innerHTML += "<img src=" + v + " />";
+		});
+	}
+</script>
+</body>
+</html>
