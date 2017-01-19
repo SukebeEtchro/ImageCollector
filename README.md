@@ -3,3 +3,5 @@
 1. Copy source of a page
 2. Paste it to Textbox
 3. Click button
+
+### Only for ".jpg .jpeg .png .gif .bmp"

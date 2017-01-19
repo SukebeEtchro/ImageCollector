@@ -9,19 +9,29 @@
 <div id="etchimg"></div>
 <script type="text/javascript">
 	function loadURLs() {
+		if(!document.getElementById("urltext").value) {
+			alert("Paste source in the textbox.");
+			return 0;
+		}
+		console.time("timer");
 		var images = [];
 		var rawtextArray = document.getElementById("urltext").value.split(" ");
 		console.log(rawtextArray);
 		rawtextArray.forEach(function(v, i){
-			var rer = v.match(/"(http:\/\/.+)"/g);
+			var rer = v.match(/.*(http:\/\/.+[jpg|jpeg|png|gif|bmp])/);
 			if(rer != null) {
-				images.push(rer);
+				images.push(rer[1]);
 			}
 		});
-		console.log(images);
-		images.forEach(function(v, i){
-			document.getElementById("etchimg").innerHTML += "<img src=" + v + " />";
-		});
+		if(images.length === 0) {
+			alert("Sorry, I found no images on your text.");
+		} else {
+			console.log(images);
+			images.forEach(function(v, i){
+				document.getElementById("etchimg").innerHTML += "<img src=" + v + " />";
+			});
+			console.timeEnd("timer");
+		}
 	}
 </script>
 </body>
