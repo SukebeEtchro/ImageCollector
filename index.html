@@ -15,12 +15,13 @@
 		}
 		console.time("timer");
 		var images = [];
-		var rawtextArray = document.getElementById("urltext").value.split(" ");
-		console.log(rawtextArray);
-		rawtextArray.forEach(function(v, i){
-			var rer = v.match(/.*(http:\/\/.+[jpg|jpeg|png|gif|bmp])/);
-			if(rer != null) {
-				images.push(rer[1]);
+		var rawtext = document.getElementById("urltext").value;
+		console.log(rawtext);
+		var URLArray = rawtext.match(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g);
+		URLArray.forEach(function(v, i){
+			var res = v.match(/.+(jpg|jpeg|gif|png|bmp)/);
+			if(res !== null){
+				images.push(res[0]);
 			}
 		});
 		if(images.length === 0) {
