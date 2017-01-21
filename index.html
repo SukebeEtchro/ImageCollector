@@ -7,31 +7,65 @@
 <input type="text" id="urltext" style="width: 400px;" />
 <input type="button" value="Go" onclick="loadURLs();" />
 <div id="etchimg"></div>
+<script type="text/javascript" src="./jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="./jquery.xdomainajax.js"></script>
 <script type="text/javascript">
 	function loadURLs() {
+		if(document.getElementById("etchimg").innerHTML && window.confirm("Reset images?")){
+			document.getElementById("etchimg").innerHTML = "";
+		}
 		if(!document.getElementById("urltext").value) {
 			alert("Paste source in the textbox.");
 			return 0;
 		}
 		console.time("timer");
 		var images = [];
-		var rawtext = document.getElementById("urltext").value;
-		console.log(rawtext);
-		var URLArray = rawtext.match(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g);
-		URLArray.forEach(function(v, i){
-			var res = v.match(/.+(jpg|jpeg|gif|png|bmp)/);
-			if(res !== null){
-				images.push(res[0]);
-			}
-		});
-		if(images.length === 0) {
-			alert("Sorry, I found no images on your text.");
-		} else {
-			console.log(images);
-			images.forEach(function(v, i){
-				document.getElementById("etchimg").innerHTML += "<img src=" + v + " />";
+		var rawtext = "";
+		var rawInput = document.getElementById("urltext").value;
+		console.log(rawInput);
+		if(rawInput.match(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g) !== null){
+			$.ajax({
+				url: rawInput,
+				type: 'GET',
+				success: function(data) {
+					rawtext = data.responseText;
+					console.log(rawtext);
+
+					if(rawInput.match(/(.+)\/index\.html?$/) !== null) {
+						rawInput = rawInput.match(/(.+)\/index\.html?$/)[1];
+					}
+					if(rawInput.match(/(.+)\/$/) !== null) {
+						rawInput = rawInput.match(/(.+)\/$/)[1];
+					}
+					console.log(rawInput);
+
+
+					var URLArray = rawtext.match(/[\-_\.\!\~\*\'\(\)a-z0-9\;\/\?\:@&=\+\$\,\%\#]+(jpg|jpeg|gif|png|bmp)/g);
+					URLArray.forEach(function(v, i){
+						var res = "";
+						if(v.match(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/) === null) {
+							res = rawInput.match(/(https?|ftp)(.*\/\/.+?(?=\/))/)[0] + v;
+						} else {
+							res = v;
+						}
+						if(res !== null){
+							images.push(res);
+						}
+					});
+					if(images.length === 0) {
+						alert("Sorry, I found no images on your text.");
+					} else {
+						console.log(images);
+						images.forEach(function(v, i){
+							document.getElementById("etchimg").innerHTML += "<img src=" + v + " />";
+						});
+						console.timeEnd("timer");
+					}
+				}
 			});
-			console.timeEnd("timer");
+		} else {
+			alert("URL is wrong.");
+			return 0;
 		}
 	}
 </script>
