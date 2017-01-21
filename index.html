@@ -29,7 +29,7 @@
 				type: 'GET',
 				success: function(data) {
 					rawtext = data.responseText;
-					console.log(rawtext);
+					// console.log(rawtext);
 
 					if(rawInput.match(/(.+)\/index\.html?$/) !== null) {
 						rawInput = rawInput.match(/(.+)\/index\.html?$/)[1];
@@ -40,7 +40,7 @@
 					console.log(rawInput);
 
 
-					var URLArray = rawtext.match(/[\-_\.\!\~\*\'\(\)a-z0-9\;\/\?\:@&=\+\$\,\%\#]+(jpg|jpeg|gif|png|bmp)/g);
+					var URLArray = rawtext.match(/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:@&=\+\$\,\%\#]+(jpg|jpeg|gif|png|bmp)/g);
 					URLArray.forEach(function(v, i){
 						var res = "";
 						if(v.match(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/) === null) {
