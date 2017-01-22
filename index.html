@@ -41,12 +41,34 @@
 
 
 					var URLArray = rawtext.match(/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:@&=\+\$\,\%\#]+(jpg|jpeg|gif|png|bmp)/g);
+					if(URLArray === null) {
+						alert("Sorry, I found no images on your text.");
+						return 0;
+					}
 					URLArray.forEach(function(v, i){
 						var res = "";
 						if(v.match(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/) === null) {
-							res = rawInput.match(/(https?|ftp)(.*\/\/.+?(?=\/))/)[0] + v;
+							if(v.match(/^\/\//) !== null) {
+								res = "http:" + v;
+							} else if(v.match(/^\//) !== null) {
+								res = rawInput.match(/(https?|ftp)(.*\/\/.+?(?=\/))/)[0] + v;
+							} else if(v.match(/^\.\.\//) !== null) {
+								var dirArray = rawInput.split("/");
+								var dir = dirArray[0] + "/" + dirArray[1] + "/";
+								for(let k = 0; k < dirArray.length - v.split("../").length - 2; k++) {
+									dir += dirArray[k + 2] + "/";
+								}
+								res = dir + v.split("../").slice(-1);
+							} else {
+								var dirArray = rawInput.split("/");
+								var dir = dirArray[0] + "/" + dirArray[1] + "/";
+								for(let k = 0; k < dirArray.length - 3; k++) {
+									dir += dirArray[k + 2] + "/";
+								}
+								res = dir + v.split("../").slice(-1);
+							}
 						} else {
-							res = v;
+							res = v.match(/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/)[0];
 						}
 						if(res !== null){
 							images.push(res);
